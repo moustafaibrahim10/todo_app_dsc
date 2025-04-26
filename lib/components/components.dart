@@ -64,3 +64,24 @@ Widget buildTaskList(
   separatorBuilder: (context, index) => Divider(color: Colors.grey),
   itemCount: 20,
 );
+
+Widget defultTextFormField(
+{
+  required TextEditingController controller,
+  required String labelText,
+}
+    )=>    TextFormField(
+  controller: controller,
+  decoration: InputDecoration(
+    labelText: labelText,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(5),
+    ),
+  ),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return "$labelText must not be empty";
+    }
+    return null;
+  },
+);

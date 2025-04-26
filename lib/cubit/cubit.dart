@@ -2,6 +2,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:todo_dsc/components/constatns.dart';
 import 'package:todo_dsc/cubit/states.dart';
 import 'package:todo_dsc/modules/archive_tasks/archive_tasks.dart';
 import 'package:todo_dsc/modules/done_tasks/done_tasks.dart';
@@ -49,9 +50,19 @@ class TodoCubit extends Cubit<TodoStates> {
         await database.execute(
           'CREATE TABLE tasks (id INTEGER PRIMARY KEY,title TEXT,date Text , time TEXT , status TEXT) ',
         );
+        emit(DatabaseCreatedSuccessfully());
         print('Database created successfully');
       },
       onOpen: (database) {
+        getDataFromDatabase(database).then((value)
+        {
+          tasks=value;
+          print(tasks);
+        }).catchError((error)
+        {
+          print(error);
+        });
+        emit(DatabaseOpenedSuccessfully());
         print("Database opened successfully");
       },
     );
@@ -70,6 +81,12 @@ class TodoCubit extends Cubit<TodoStates> {
       print("data inserted");
     });
   }
+  //List<Map> list = await database.rawQuery('SELECT * FROM Test');
+  Future<List<Map>> getDataFromDatabase(database) async
+  {
+    return await database!.rawQuery('SELECT * FROM tasks');
+  }
+  //tasks[0]['id']
 
   //textFormFIeld
 }
